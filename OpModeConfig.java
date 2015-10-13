@@ -160,7 +160,7 @@ public class OpModeConfig extends OpMode {
     if (configState!=Config.READY) {
       telemetry.addData("D" + configState.ordinal(), "Push Start for next option");
     }
-    telemetry.addData("E" + configState.ordinal(), "Push Back or a Trigger to go back");
+    telemetry.addData("E" + configState.ordinal(), "Push Back or a Bumper to go back");
 
     if (start1 && !lastStart1 && (configState.ordinal() < Config.READY.ordinal())) {
       configState = configState.next();
