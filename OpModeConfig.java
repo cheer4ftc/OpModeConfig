@@ -1,11 +1,19 @@
 package com.qualcomm.ftcrobotcontroller.myPackageName;
 // change myPackageName to wherever you put this file.  change it to opmodes if you put it in the generic opmodes folder.
 
+import android.content.Context;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class OpModeConfig extends OpMode {
 
-  private static enum Config {
+  private enum Config {
     TEST_GAMEPAD1,
     TEST_GAMEPAD2,
     COLOR,
@@ -17,7 +25,7 @@ public class OpModeConfig extends OpMode {
     public Config prev() { return vals[(this.ordinal()-1+vals.length) % vals.length];}
   }
 
-  private static enum AutonType {
+  private enum AutonType {
     GO_FOR_BEACON,
     GO_FOR_MOUNTAIN;
     private static AutonType[] vals = values();
@@ -32,19 +40,46 @@ public class OpModeConfig extends OpMode {
   AutonType autonType;
 
   // variables used during the configuration process
-  Config configState, currConfigCheck;  
+  Context context;
+  Config configState, currConfigCheck;
   boolean back1, a1, a2, y1, start1;
   boolean lastBack1, lastA1, lastA2, lastY1, lastStart1;
+  private String configFileName="FtcRobotConfig.txt";
 
   @Override
   public void init() {
     // setup initial configuration parameters here
-    // may want to read previous configuration parameters from a file here too!
     gamepad1IsOK=false;
     gamepad2IsOK=false;
-    colorIsRed=true;
-    delayInSec=0;
-    autonType=AutonType.GO_FOR_BEACON;
+    context=hardwareMap.appContext;
+
+    // read configuration data from file
+    try {
+      InputStream inputStream = context.openFileInput(configFileName);
+
+      if ( inputStream != null ) {
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        colorIsRed = Boolean.valueOf(bufferedReader.readLine());
+        delayInSec = Integer.valueOf(bufferedReader.readLine());
+        String autonTypeString = bufferedReader.readLine();
+        for (AutonType a : AutonType.values()) {
+          if (a.name().equals(autonTypeString)) {
+            autonType = a;
+          }
+        }
+
+        inputStream.close();
+      }
+    }
+    catch (Exception e) {
+      telemetry.addData("Exception", "Error reading config file: " + e.toString());
+      // can't read from file, so initialize to reasonable values
+      colorIsRed=true;
+      delayInSec=0;
+      autonType=AutonType.GO_FOR_BEACON;
+    }
 
     // setup initial toggle memory states for buttons used
     lastBack1=false; lastA1=false; lastA2=false; lastY1=false; lastStart1=false;
@@ -138,7 +173,7 @@ public class OpModeConfig extends OpMode {
     currConfigCheck = Config.AUTON_TYPE;
     // message to driver about state of this config parameter
     if (configState.ordinal() >= currConfigCheck.ordinal()) {
-      telemetry.addData("C" + currConfigCheck.ordinal(), "AutoN: " + autonType.name());
+      telemetry.addData("C" + currConfigCheck.ordinal(), "Auton: " + autonType.name());
     }
     // configure this parameter
     if (configState == currConfigCheck) {
@@ -155,13 +190,28 @@ public class OpModeConfig extends OpMode {
     // message to driver about state of this config parameter
     if (configState.ordinal() >= currConfigCheck.ordinal() ) {
       telemetry.addData("C" + currConfigCheck.ordinal(), "READY TO GO!");
+
       // may want to write configuration parameters to a file here if they are needed for teleop too!
+      try {
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(configFileName, Context.MODE_PRIVATE));
+
+        // write each configuration parameter as a string on its own line
+        outputStreamWriter.write(Boolean.toString(colorIsRed)+"\n");
+        outputStreamWriter.write(Integer.toString(delayInSec)+"\n");
+        outputStreamWriter.write(autonType.name()+"\n");
+
+        outputStreamWriter.close();
+      }
+      catch (IOException e) {
+        telemetry.addData("Exception", "Configuration file write failed: " + e.toString());
+      }
+
     }
 
     if (configState!=Config.READY) {
       telemetry.addData("D" + configState.ordinal(), "Push Start for next option");
     }
-    telemetry.addData("E" + configState.ordinal(), "Push Back or a Bumper to go back");
+    telemetry.addData("E" + configState.ordinal(), "Push Back or a Trigger to go back");
 
     if (start1 && !lastStart1 && (configState.ordinal() < Config.READY.ordinal())) {
       configState = configState.next();
@@ -179,9 +229,10 @@ public class OpModeConfig extends OpMode {
     lastStart1=start1;
   }
 
-
   @Override
   public void loop() {
+    telemetry.clearData();
     // can use configured variables here
   }
+
 }
