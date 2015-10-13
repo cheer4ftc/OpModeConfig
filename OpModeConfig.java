@@ -39,6 +39,7 @@ public class OpModeConfig extends OpMode {
   @Override
   public void init() {
     // setup initial configuration parameters here
+    // may want to read previous configuration parameters from a file here too!
     gamepad1IsOK=false;
     gamepad2IsOK=false;
     colorIsRed=true;
