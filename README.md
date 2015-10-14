@@ -10,7 +10,7 @@ TEST_GAMEPAD2. The same for gamepad 2.
 
 COLOR. Lets the driver select the color of the alliance: red or blue. For example, you might need that if you're going to drive on the mountain in autonomous as for red you need to turn left and blue you need to turn right. Or you might use this when trying to push the rescue beacon button corresponding to your alliance color.
 
-DELAY. Let's you enter a number of seconds to delay the start of your code, in case your alliance partner needs to run something first to get out of your way before you start your routine.
+DELAY. Lets you enter a number of seconds to delay the start of your code, in case your alliance partner needs to run something first to get out of your way before you start your routine.
 
 AUTON_TYPE. As an example, the code pretends that there might be 2 things you might try to do: go for the beacon or go for the mountain. This lets you select which one you might try to do. You can add as many different options as you might want to have in one OpMode.
 
