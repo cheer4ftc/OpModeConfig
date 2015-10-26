@@ -46,8 +46,8 @@ public class FtcConfig {
 
   // variables used during the configuration process
   ConfigStep configStepState, currConfigStepCheck;
-  boolean back1, a1, a2, y1, start1;
-  boolean lastBack1, lastA1, lastA2, lastY1, lastStart1;
+  boolean back1, a1, b2, y1, start1;
+  boolean lastBack1, lastA1, lastB2, lastY1, lastStart1;
   private String configFileName="FtcRobotConfig.txt";
 
   public FtcConfig() {
@@ -89,7 +89,7 @@ public class FtcConfig {
     }
 
     // setup initial toggle memory states for buttons used
-    lastBack1=false; lastA1=false; lastA2=false; lastY1=false; lastStart1=false;
+    lastBack1=false; lastA1=false; lastB2=false; lastY1=false; lastStart1=false;
     configStepState = ConfigStep.TEST_GAMEPAD1;
   }
 
@@ -97,7 +97,7 @@ public class FtcConfig {
     // read the gamepad state
     back1 = opMode.gamepad1.back || opMode.gamepad1.left_bumper || opMode.gamepad1.right_bumper;
     a1 = opMode.gamepad1.a;
-    a2 = opMode.gamepad2.a;
+    b2 = opMode.gamepad2.b;
     y1 = opMode.gamepad1.y;
     start1 = opMode.gamepad1.start;
 
@@ -130,9 +130,9 @@ public class FtcConfig {
     // configure this parameter
     if (configStepState == currConfigStepCheck) {
       if (!gamepad2IsOK) {
-        opMode.telemetry.addData("C" + currConfigStepCheck.ordinal() + "A", "Push A on Gamepad 2");
+        opMode.telemetry.addData("C" + currConfigStepCheck.ordinal() + "A", "Push B on Gamepad 2");
       }
-      if (a2) {
+      if (b2) {
         gamepad2IsOK = true;
       }
     }
@@ -217,7 +217,7 @@ public class FtcConfig {
     if (configStepState != ConfigStep.READY) {
       opMode.telemetry.addData("D" + configStepState.ordinal(), "Push Start for next option");
     }
-    opMode.telemetry.addData("E" + configStepState.ordinal(), "Push Back or a Trigger to go back");
+    opMode.telemetry.addData("E" + configStepState.ordinal(), "Push Back or a Bumper to go back");
 
     if (start1 && !lastStart1 && (configStepState.ordinal() < ConfigStep.READY.ordinal())) {
       configStepState = configStepState.next();
@@ -230,7 +230,7 @@ public class FtcConfig {
     // update toggle memory for next call
     lastBack1=back1;
     lastA1=a1;
-    lastA2=a2;
+    lastB2=b2;
     lastY1=y1;
     lastStart1=start1;
   }
