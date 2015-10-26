@@ -1,6 +1,9 @@
 # OpModeConfig
 Shows how pre-match OpMode configuration can be done using the gamepads with telemetry messages.
 
+OpModeConfig.java shows how to do it with all of your code in the OpMode itself.
+FtcConfig.java and OpFtcConfig show how to do it with the config code in the class FtcConfig and the OpFtcConfig OpMode just calling the class methods.
+
 The general idea is that you want to step through different configuration options. You can always go to the next option by pressing Start or go back one step by pressing Back or a bumper.
 In the example code, the configuration steps are listed in the Config enum. They are:
 
