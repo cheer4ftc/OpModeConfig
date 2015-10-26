@@ -42,8 +42,8 @@ public class OpModeConfig extends OpMode {
   // variables used during the configuration process
   Context context;
   Config configState, currConfigCheck;
-  boolean back1, a1, a2, y1, start1;
-  boolean lastBack1, lastA1, lastA2, lastY1, lastStart1;
+  boolean back1, a1, b2, y1, start1;
+  boolean lastBack1, lastA1, lastB2, lastY1, lastStart1;
   private String configFileName="FtcRobotConfig.txt";
 
   @Override
@@ -82,7 +82,7 @@ public class OpModeConfig extends OpMode {
     }
 
     // setup initial toggle memory states for buttons used
-    lastBack1=false; lastA1=false; lastA2=false; lastY1=false; lastStart1=false;
+    lastBack1=false; lastA1=false; lastB2=false; lastY1=false; lastStart1=false;
     configState=Config.TEST_GAMEPAD1;
   }
 
@@ -91,7 +91,7 @@ public class OpModeConfig extends OpMode {
     // read the gamepad state
     back1 = gamepad1.back || gamepad1.left_bumper || gamepad1.right_bumper;
     a1 = gamepad1.a;
-    a2 = gamepad2.a;
+    b2 = gamepad2.b;
     y1 = gamepad1.y;
     start1 = gamepad1.start;
 
@@ -124,9 +124,9 @@ public class OpModeConfig extends OpMode {
     // configure this parameter
     if (configState == currConfigCheck) {
       if (!gamepad2IsOK) {
-        telemetry.addData("C" + currConfigCheck.ordinal() + "A", "Push A on Gamepad 2");
+        telemetry.addData("C" + currConfigCheck.ordinal() + "A", "Push B on Gamepad 2");
       }
-      if (a2) {
+      if (b2) {
         gamepad2IsOK = true;
       }
     }
@@ -211,7 +211,7 @@ public class OpModeConfig extends OpMode {
     if (configState!=Config.READY) {
       telemetry.addData("D" + configState.ordinal(), "Push Start for next option");
     }
-    telemetry.addData("E" + configState.ordinal(), "Push Back or a Trigger to go back");
+    telemetry.addData("E" + configState.ordinal(), "Push Back or a Bumper to go back");
 
     if (start1 && !lastStart1 && (configState.ordinal() < Config.READY.ordinal())) {
       configState = configState.next();
@@ -224,7 +224,7 @@ public class OpModeConfig extends OpMode {
     // update toggle memory for next call
     lastBack1=back1;
     lastA1=a1;
-    lastA2=a2;
+    lastB2=b2;
     lastY1=y1;
     lastStart1=start1;
   }
