@@ -2,7 +2,13 @@
 Shows how pre-match OpMode configuration can be done using the gamepads with telemetry messages.
 
 OpModeConfig.java shows how to do it with all of your code in the OpMode itself.
-FtcConfig.java and OpFtcConfig show how to do it with the config code in the class FtcConfig and the OpFtcConfig OpMode just calling the class methods.
+
+FtcConfig.java and OpFtcConfig.java show how to do it with the config code in the class FtcConfig and the OpFtcConfig OpMode just calling the class methods.
+
+LinearOpFtcConfig.java shos the same using the LinearOpMode paradigm.  
+THIS DOES NOT WORK AS OF 10/26/15 DUE TO A BUG IN THE SDK REPORTED HERE: 
+http://ftcforum.usfirst.org/showthread.php?4576-Game-controller-input-during-init_loop()&p=18496&viewfull=1#post18496
+IT SHOULD WORK (?) WHEN THE BUG IS FIXED IN THE NEXT SDK RELEASE!!!!!
 
 The general idea is that you want to step through different configuration options. You can always go to the next option by pressing Start or go back one step by pressing Back or a bumper.
 In the example code, the configuration steps are listed in the Config enum. They are:
