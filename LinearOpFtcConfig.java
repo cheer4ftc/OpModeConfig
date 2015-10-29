@@ -14,12 +14,14 @@ public class LinearOpFtcConfig extends LinearOpMode {
     FtcConfig ftcConfig=new FtcConfig();
 
     ftcConfig.init(hardwareMap.appContext, this);
-    waitOneFullHardwareCycle();
+    // waitOneFullHardwareCycle();
+    sleep(50); // temporary fix to waitXXXHardwareCycle bug?
 
     // init_loop type functionality here
     while (!opModeIsActive() ) {
       ftcConfig.init_loop(hardwareMap.appContext, this);
-      waitOneFullHardwareCycle();
+      // waitOneFullHardwareCycle();
+      sleep(50); // temporary fix to waitXXXHardwareCycle bug?
     }
     // done with configuration
 
